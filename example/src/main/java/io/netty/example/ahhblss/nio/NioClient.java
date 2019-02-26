@@ -48,7 +48,7 @@ public class NioClient {
             }
         }).start();
 
-        if (connected.getCount() == 0) {
+        if (connected.getCount() != 0) {
             connected.await();
         }
 
@@ -145,7 +145,7 @@ public class NioClient {
         System.out.println("queue add:" + content);
 
         client.register(selector, SelectionKey.OP_WRITE, responseQueue);
-//        selector.wakeup();
+        selector.wakeup();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
