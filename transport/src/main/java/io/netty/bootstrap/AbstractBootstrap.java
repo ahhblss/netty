@@ -315,10 +315,17 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
         }
     }
 
+    /**
+     * 初始化并注册一个 Channel 对象
+     * @return
+     */
     final ChannelFuture initAndRegister() {
         Channel channel = null;
         try {
+            // 1.创建channel
             channel = channelFactory.newChannel();
+
+            // 2.初始化channel配置
             init(channel);
         } catch (Throwable t) {
             if (channel != null) {
@@ -331,6 +338,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
             return new DefaultChannelPromise(new FailedChannel(), GlobalEventExecutor.INSTANCE).setFailure(t);
         }
 
+        // 3.注册 Channel 到 EventLoopGroup 中
         ChannelFuture regFuture = config().group().register(channel);
         if (regFuture.cause() != null) {
             if (channel.isRegistered()) {
